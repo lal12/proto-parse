@@ -1,0 +1,33 @@
+{
+  "name": "proto-parse",
+  "version": "0.0.2",
+  "description": "Utility to parse a proto file, which describes a Google protocol buffer.",
+  "main": "proto-parse.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lal12/proto-parse.git"
+  },
+  "keywords": [
+    "proto",
+    "protobuf",
+    "parse",
+    "peg.js",
+    "pegjs",
+    "file"
+  ],
+  "scripts": {
+    "prepublish": "node build.js"
+  },
+  "author": "Luca Lindhorst",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lal12/proto-parse/issues"
+  },
+  "homepage": "https://github.com/lal12/proto-parse#readme",
+  "devDependencies": {
+    "pegjs": "^0.10.0"
+  }
+}
