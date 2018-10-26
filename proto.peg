@@ -1,15 +1,19 @@
-proto = ws? a:syntax b:(import / package / option / emptyStatement / message / enum / service / ws)*
+proto = z:ws? a:syntax b:(import / package / option / emptyStatement / message / enum / service / ws)*
 {
 	var arr = {syntax: a.syntax};
     arr.content = b.filter(function(a){return a !== undefined});
 	return arr;
 }
 
-comment = "//" [ A-Za-z0-9._-]* ("\n" / "\r\n") 
+slcomment = "//" (!("\r\n" / "\n") .)* ("\n" / "\r\n") 
 {}
-rws = [ \r\n\t]+ / comment // Real white space
+mlcomment = "/*" (!"*/" .)* "*/"
 {}
-ws = rws
+comment = ( slcomment / mlcomment )
+{}
+rws = [ \r\n\t] / comment // Real white space
+{}
+ws = rws+
 {}
 
 letter = [A-Za-z]
@@ -115,6 +119,7 @@ oneof = "oneof" ws? b:oneofName ws? "{" c:( ws / oneofField / emptyStatement)+ "
     });
 	return { type: "oneof", name: b, content: arr } 
 }
+
 oneofField = b:type ws? c:fieldName ws? "=" ws? d:fieldNumber ws? e:(fieldOptionsParam)? ws? ";"
 {
 	return {
@@ -141,7 +146,7 @@ mapField = "map" ws? "<" ws? a:keyType ws? "," ws? b:type ws? ">" ws? c:mapName 
 }
 keyType = "int32" / "int64" / "uint32" / "uint64" / "sint32" / "sint64" /
           "fixed32" / "fixed64" / "sfixed32" / "sfixed64" / "bool" / "string"
-          
+
 reserved = "reserved" ws ( ranges / fieldNames ) ";"
 fieldNames = fieldName ("," fieldName)*
 ranges = range ( ws? "," ws? (range) )*
@@ -163,6 +168,7 @@ enumBody = "{" a:(ws / option / enumField / emptyStatement)* "}"
     }
     return {content: content, opts: opts};
 }
+
 enumField = a:ident ws? "=" ws? b:intLit ws? c:(fieldOptionsParam)? ws? ";"
 {
 	return { type: 'enumField', name: a, val: b, opts: c == null ? {} : c };
@@ -183,7 +189,6 @@ messageBody = "{" a:( field / enum / message / option / oneof / mapField /reserv
     }
     return {content: content, opts: opts};
 }
-
 
 service = "service" ws a:serviceName ws? "{" b:( ws / option / rpc / emptyStatement )* "}"
 { 
