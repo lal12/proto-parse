@@ -77,3 +77,4 @@ results in:
 ## Changes
  - v0.0.1	Initial commit.
  - v0.0.2	Just fixed some bugs in the Readme file.
+ - v0.0.4	Fixed comment parsing
