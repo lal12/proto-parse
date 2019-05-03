@@ -8,6 +8,7 @@ It is optimized for proto3 files and yet does not work for proto2. This parser s
 - Add proto2 support
 - Do more checking, e.g. check whether userdefined type really exists.
 - Check stream support in services. Documentation does not specify the syntax, so I am waiting for Google to fix this.
+- Add better reserved support
 
 Please feel free to request any feature on [github](https://github.com/lal12/proto-parse/issues).
 
@@ -74,7 +75,182 @@ results in:
 		"opts": {}
 	}
 
+## Example
+
+```proto3
+syntax = "proto3";
+
+message SearchRequest {
+	string query = 1;
+	int32 page_number = 2;
+	int32 result_per_page = 3;
+	message Exmpl{
+		oneof test_oneof {
+			string name = 4;
+			SubMessage sub_message = 9;
+		}
+	}
+	enum Corpus {
+		UNIVERSAL = 0;
+		WEB = 1;
+		IMAGES = 2;
+		LOCAL = 3;
+		NEWS = 4;
+		PRODUCTS = 5;
+		VIDEO = 6;
+	}
+	Corpus corpus = 4;
+	map<int32, string> bla = 1;
+	repeated Exmpl results = 1;
+	reserved 2, 15, 9 to 11;
+}
+```
+
+turns into:
+
+```JSON
+{
+  "syntax": "proto3",
+  "content": [
+    {
+      "type": "message",
+      "name": "SearchRequest",
+      "content": [
+        {
+          "type": "field",
+          "repeated": false,
+          "typename": "string",
+          "name": "query",
+          "fieldNo": 1,
+          "opts": {}
+        },
+        {
+          "type": "field",
+          "repeated": false,
+          "typename": "int32",
+          "name": "page_number",
+          "fieldNo": 2,
+          "opts": {}
+        },
+        {
+          "type": "field",
+          "repeated": false,
+          "typename": "int32",
+          "name": "result_per_page",
+          "fieldNo": 3,
+          "opts": {}
+        },
+        {
+          "type": "message",
+          "name": "Exmpl",
+          "content": [
+            {
+              "type": "oneof",
+              "name": "test_oneof",
+              "content": [
+                {
+                  "type": "field",
+                  "typename": "string",
+                  "name": "name",
+                  "fieldNo": 4,
+                  "opts": {}
+                },
+                {
+                  "type": "field",
+                  "typename": "SubMessage",
+                  "name": "sub_message",
+                  "fieldNo": 9,
+                  "opts": {}
+                }
+              ]
+            }
+          ],
+          "opts": {}
+        },
+        {
+          "type": "enum",
+          "name": "Corpus",
+          "content": [
+            {
+              "type": "enumField",
+              "name": "UNIVERSAL",
+              "val": 0,
+              "opts": {}
+            },
+            {
+              "type": "enumField",
+              "name": "WEB",
+              "val": 1,
+              "opts": {}
+            },
+            {
+              "type": "enumField",
+              "name": "IMAGES",
+              "val": 2,
+              "opts": {}
+            },
+            {
+              "type": "enumField",
+              "name": "LOCAL",
+              "val": 3,
+              "opts": {}
+            },
+            {
+              "type": "enumField",
+              "name": "NEWS",
+              "val": 4,
+              "opts": {}
+            },
+            {
+              "type": "enumField",
+              "name": "PRODUCTS",
+              "val": 5,
+              "opts": {}
+            },
+            {
+              "type": "enumField",
+              "name": "VIDEO",
+              "val": 6,
+              "opts": {}
+            }
+          ],
+          "opts": {}
+        },
+        {
+          "type": "field",
+          "repeated": false,
+          "typename": "Corpus",
+          "name": "corpus",
+          "fieldNo": 4,
+          "opts": {}
+        },
+        {
+          "type": "field",
+          "typename": "map",
+          "key": "int32",
+          "value": "string",
+          "name": "bla",
+          "fieldNo": 1,
+          "opts": {}
+        },
+        {
+          "type": "field",
+          "repeated": true,
+          "typename": "Exmpl",
+          "name": "results",
+          "fieldNo": 1,
+          "opts": {}
+        }
+      ],
+      "opts": {}
+    }
+  ]
+}
+```
+
 ## Changes
  - v0.0.1	Initial commit.
  - v0.0.2	Just fixed some bugs in the Readme file.
  - v0.0.4	Fixed comment parsing
+ - v0.0.5 Bugfix: Fieldno with more than two digits is not correctly parsed.
+          Added example in README.

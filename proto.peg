@@ -39,7 +39,7 @@ enumType = a:"."? b:(ident ".")* c:enumName
 
 intLit     = decimalLit / octalLit / hexLit
 decimalLit = a:("0" / [1-9] decDigit*)
-{ return parseInt(a[0]+a[1]) }
+{ return parseInt(a[0]+ (a[1] ? a[1].join('') : '')) }
 octalLit   = "0" a:octDigit+
 { return parseInt(a, 8) }
 hexLit     = "0" [xX] a:hexDigit+  

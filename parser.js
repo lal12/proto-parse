@@ -179,7 +179,7 @@ function peg$parse(input, options) {
       peg$c31 = peg$literalExpectation("0", false),
       peg$c32 = /^[1-9]/,
       peg$c33 = peg$classExpectation([["1", "9"]], false, false),
-      peg$c34 = function(a) { return parseInt(a[0]+a[1]) },
+      peg$c34 = function(a) { return parseInt(a[0]+ (a[1] ? a[1].join('') : '')) },
       peg$c35 = function(a) { return parseInt(a, 8) },
       peg$c36 = /^[xX]/,
       peg$c37 = peg$classExpectation(["x", "X"], false, false),
