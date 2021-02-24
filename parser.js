@@ -277,8 +277,14 @@ function peg$parse(input, options) {
       peg$c129 = function(a) {
       	var opts = {};
           a.map(function(a){
-                if(typeof a == 'object' && a != null)
-                	opts[a.name] = a.val;
+                function fixRep(v) {
+                  if(Array.isArray(v)) return(v[1]);
+                  return(v);
+                }
+                if(Array.isArray(a))
+                  opts[a[2].name] = fixRep(a[2].val);
+                else if(typeof a == 'object' && a != null)
+                	opts[a.name] = fixRep(a.val);
           });
       	return opts;    
       },
