@@ -277,7 +277,9 @@ function peg$parse(input, options) {
       peg$c129 = function(a) {
       	var opts = {};
           a.map(function(a){
-                if(typeof a == 'object' && a != null)
+                if(Array.isArray(a))
+                  opts[a[2].name] = a[2].val;
+                else if(typeof a == 'object' && a != null)
                 	opts[a.name] = a.val;
           });
       	return opts;    
