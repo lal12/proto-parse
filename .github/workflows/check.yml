@@ -1,0 +1,21 @@
+name: 'Check'
+on:
+  pull_request:
+    branches: [ main ]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: 'Ensure package.json version has been incremented'
+        uses: Q4Justice/package-version-check@v1.0.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          package-file: 'package.json'
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+      - run: 'npm install'
+        working-directory: ${{ github.workspace }}
+      - run: 'make check'
+        working-directory: ${{ github.workspace }}
