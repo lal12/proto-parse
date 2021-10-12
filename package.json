@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Q4Justice/q4j-proto-parse.git"
+    "url": "git+https://github.com/Q4Justice/proto-parse.git"
   },
   "publishConfig": {
     "@q4justice:registry": "https://npm.pkg.github.com/"
