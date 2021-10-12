@@ -1,0 +1,8 @@
+# Node.js Tools for Visual Studio
+node_modules/
+
+# prettier ignore
+.prettierignore
+
+# Generated code
+src/parser.js

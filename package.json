@@ -1,15 +1,12 @@
 {
-  "name": "proto-parse",
-  "version": "0.0.5",
-  "description": "Utility to parse a proto3 file, which describes a Google protocol buffer.",
+  "name": "q4j-proto-parse",
+  "version": "0.0.6",
+  "description": "Quest for Justice utility to parse a proto3 file, forked from lal12/proto-parse",
   "main": "proto-parse.js",
   "scripts": {
-    "prepublishOnly": "node build.js"
+    "build": "node scripts/build.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/lal12/proto-parse.git"
-  },
+  "repository": "Q4Justice/q4j-proto-parse",
   "keywords": [
     "proto",
     "protobuf",
@@ -19,13 +16,19 @@
     "file",
     "proto3"
   ],
-  "author": "Luca Lindhorst <info@lucalindhorst.de>",
+  "author": "jcnguyen",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/lal12/proto-parse/issues"
+    "url": "https://github.com/Q4Justice/proto-parse/issues"
   },
-  "homepage": "https://github.com/lal12/proto-parse#readme",
+  "homepage": "https://github.com/Q4Justice/proto-parse#readme",
   "devDependencies": {
-    "pegjs": "^0.10.0"
+    "eslint": "^7.25.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-unused-imports": "^1.1.5",
+    "pegjs": "^0.10.0",
+    "prettier": "^2.4.1"
   }
 }
