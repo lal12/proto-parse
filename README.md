@@ -59,11 +59,11 @@ The function returns an array containing the following elements:
 
 ```
 {
-  "type": "message",
-  "name": "MY_MESSAGE" // Name of the message
-  "content": [ 
+    "type": "message",
+    "name": "MY_MESSAGE" // Name of the message
+    "content": [ 
      // Contains messages, fields, enums, etc.
-  ]
+    ]
 }
 ```
 
@@ -275,7 +275,7 @@ turns into:
 1. Update the parsing rules in `proto.peg`
 2. In the console, run `npm run build`. This generates a new `parser.js` file with the parsing rules.
 
-### Make a new version of the package
+### Publish a new version of the package
 
 1. Increment the package version number before submitting a PR
-2. After the PR is submitted, run the "Publish" workflow in GitHub Actions
+2. After the PR is merged, the "Publish" workflow will automatically run to publish a new version of the package

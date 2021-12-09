@@ -1,6 +1,6 @@
 {
   "name": "@q4justice/q4j-proto-parse",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Quest for Justice utility to parse a proto3 file, forked from lal12/proto-parse",
   "main": "./src/proto-parse.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Q4Justice/proto-parse.git"
+    "url": "git+https://github.com/Q4Justice/q4j-proto-parse.git"
   },
   "publishConfig": {
     "@q4justice:registry": "https://npm.pkg.github.com/"
@@ -25,9 +25,9 @@
   "author": "jcnguyen",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Q4Justice/proto-parse/issues"
+    "url": "https://github.com/Q4Justice/q4j-proto-parse/issues"
   },
-  "homepage": "https://github.com/Q4Justice/proto-parse#readme",
+  "homepage": "https://github.com/Q4Justice/q4j-proto-parse#readme",
   "dependencies": {
     "ow": "^0.28.1"
   },
