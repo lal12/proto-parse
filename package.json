@@ -1,6 +1,6 @@
 {
   "name": "@q4justice/q4j-proto-parse",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Quest for Justice utility to parse a proto3 file, forked from lal12/proto-parse",
   "main": "./src/proto-parse.js",
   "scripts": {
@@ -28,6 +28,9 @@
     "url": "https://github.com/Q4Justice/proto-parse/issues"
   },
   "homepage": "https://github.com/Q4Justice/proto-parse#readme",
+  "dependencies": {
+    "ow": "^0.28.1"
+  },
   "devDependencies": {
     "eslint": "^7.25.0",
     "eslint-config-prettier": "^8.3.0",

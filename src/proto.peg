@@ -147,10 +147,17 @@ mapField = "map" ws? "<" ws? a:keyType ws? "," ws? b:type ws? ">" ws? c:mapName 
 keyType = "int32" / "int64" / "uint32" / "uint64" / "sint32" / "sint64" /
           "fixed32" / "fixed64" / "sfixed32" / "sfixed64" / "bool" / "string"
 
-reserved = "reserved" ws ( ranges / fieldNames ) ";"
-fieldNames = fieldName ("," fieldName)*
-ranges = range ( ws? "," ws? (range) )*
 range = intLit ws "to" ws intLit / intLit
+ranges = range ( ws? "," ws? (range) )*
+reservedFieldName = ("'" fieldName "'") / ('"' fieldName '"')
+reservedFieldNames = reservedFieldName ("," reservedFieldName)*
+reserved = "reserved" ws a:( ranges / reservedFieldNames ) ";"
+{
+    return {
+        type: 'reserved',
+        values: a == null ? null : a,
+    }
+}
 
 enum = "enum" ws? a:enumName ws? b:enumBody
 { return {type: 'enum', name: a, content: b.content, opts: b.opts } }

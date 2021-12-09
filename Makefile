@@ -1,7 +1,7 @@
 check:
-	npx eslint "src/*.js"
-	npx prettier --ignore-path ".prettierignore" --check "src/*.{js,json}"
+	npx eslint "*/*.js"
+	npx prettier --ignore-path ".prettierignore" --check "*/*.{js,json}"
 
 fix:
-	npx eslint --fix "src/*.js"
-	npx prettier --ignore-path ".prettierignore" --write "src/*.{js,json}"
+	npx eslint --fix "*/*.js"
+	npx prettier --ignore-path ".prettierignore" --write "*/*.{js,json}"
