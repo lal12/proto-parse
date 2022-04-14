@@ -150,7 +150,7 @@ keyType = "int32" / "int64" / "uint32" / "uint64" / "sint32" / "sint64" /
 range = intLit ws "to" ws intLit / intLit
 ranges = range ( ws? "," ws? (range) )*
 reservedFieldName = ("'" fieldName "'") / ('"' fieldName '"')
-reservedFieldNames = reservedFieldName ("," reservedFieldName)*
+reservedFieldNames = reservedFieldName ( ws? "," ws? (reservedFieldName) )*
 reserved = "reserved" ws a:( ranges / reservedFieldNames ) ";"
 {
     return {
