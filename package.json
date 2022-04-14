@@ -1,6 +1,6 @@
 {
     "name": "@q4justice/q4j-proto-parse",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "description": "Quest for Justice utility to parse a proto3 file, forked from lal12/proto-parse",
     "main": "./src/proto-parse.js",
     "scripts": {
