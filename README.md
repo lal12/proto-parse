@@ -275,6 +275,10 @@ turns into:
 1. Update the grammar in `proto.peg`
 2. Run `npm run build`. This generates a new `parser.js` file with the parsing rules.
 
+### Test
+
+Run the `proto-parse.test.js` file.
+
 ### Format and style
 
 Fix the formatting and styling issues according to ESLint and Prettier: `npm run prettify`

@@ -1,0 +1,826 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+option csharp_namespace = "Quest";
+
+package quest;
+
+service Quests {
+  rpc CreateCase (CreateCaseRequest) returns (CreateCaseResponse);
+  rpc DeleteCase (DeleteCaseRequest) returns (DeleteCaseResponse);
+  rpc GetCase (GetCaseRequest) returns (GetCaseResponse);
+  rpc UpdateCase (UpdateCaseRequest) returns (UpdateCaseResponse);
+  rpc GetEtagForCase (GetEtagForCaseRequest) returns (GetEtagForCaseResponse);
+
+  rpc CreateQuest (CreateQuestRequest) returns (CreateQuestResponse);
+  rpc DeleteQuest (DeleteQuestRequest) returns (DeleteQuestResponse);
+  rpc GetQuest (GetQuestRequest) returns (GetQuestResponse);
+  rpc GetQuests (GetQuestsRequest) returns (GetQuestsResponse);
+  rpc UpdateQuest (UpdateQuestRequest) returns (UpdateQuestResponse);
+  rpc GetEtagForQuest (GetEtagForQuestRequest) returns (GetEtagForQuestResponse);
+
+  rpc GetCourtsForZipCode (GetCourtsForZipCodeRequest) returns (GetCourtsForZipCodeResponse);
+  rpc GetCommunityCourts (GetCommunityCourtsRequest) returns (GetCommunityCourtsResponse);
+  rpc GetCourt (GetCourtRequest) returns (GetCourtResponse);
+
+  rpc SearchCompanies (SearchCompaniesRequest) returns (SearchCompaniesResponse);
+  rpc GetCompany (GetCompanyRequest) returns (GetCompanyResponse);
+
+  rpc GenerateDemandLetters (GenerateDemandLettersRequest) returns (GenerateDemandLettersResponse);
+  rpc GetDemandLetters (GetDemandLettersRequest) returns (stream GetDemandLettersResponse);
+
+  rpc GetProductPrice (GetProductPriceRequest) returns (GetProductPriceResponse);
+  rpc CreateMailDemandLetterPurchaseOrder (CreateMailDemandLetterPurchaseOrderRequest) returns (CreatePurchaseOrderResponse);
+  rpc GetPurchaseOrder (GetPurchaseOrderRequest) returns (GetPurchaseOrderResponse);
+  rpc VerifyAddress (VerifyAddressRequest) returns (VerifyAddressResponse);
+  rpc CalculatePlaintiffTotalDemandAmount (CalculatePlaintiffTotalDemandAmountRequest) returns (CalculatePlaintiffTotalDemandAmountResponse);
+  rpc CalculatePlaintiffTotalDamageAmount (CalculatePlaintiffTotalDamageAmountRequest) returns (CalculatePlaintiffTotalDamageAmountResponse);
+}
+
+message VerifyAddressRequest {
+  PostalAddress address = 1;
+}
+
+message VerifyAddressResponse {
+  PostalAddress suggested_address = 1;
+  google.protobuf.BoolValue is_suggested_different = 2;
+  google.protobuf.BoolValue is_suggested_standardized = 3;
+}
+
+message CalculatePlaintiffTotalDamageAmountRequest {
+  repeated DuePayment due_payments = 1;
+  repeated RepaidDamage repaid_damages = 2;
+  repeated AdditionalDamage additional_damages = 3;
+  google.protobuf.BoolValue is_entity = 4;
+  google.protobuf.BoolValue is_over_claim_dollar_threshold = 5;
+  UsStateKind filing_state = 6;
+}
+
+message CalculatePlaintiffTotalDemandAmountRequest {
+  repeated DuePayment due_payments = 1;
+  repeated RepaidDamage repaid_damages = 2;
+  repeated AdditionalDamage additional_damages = 3;
+  UsStateKind filing_state = 4;
+}
+
+message CalculatePlaintiffTotalDemandAmountResponse {
+  google.protobuf.DoubleValue amount = 1;
+}
+
+message CalculatePlaintiffTotalDamageAmountResponse {
+  google.protobuf.DoubleValue amount = 1;
+}
+
+message DuePayment {
+  google.protobuf.DoubleValue amount = 1;
+  google.protobuf.DoubleValue interest = 2;
+}
+
+message RepaidDamage {
+  google.protobuf.DoubleValue amount = 1;
+}
+
+message AdditionalDamage {
+  google.protobuf.DoubleValue amount = 1;
+}
+
+message GetPurchaseOrderRequest {
+  google.protobuf.StringValue purchase_order_id = 1;
+}
+
+message GetPurchaseOrderResponse {
+  PurchaseOrder purchase_order = 1;
+}
+
+message PurchaseOrder {
+  google.protobuf.StringValue purchase_order_id = 1;
+  google.protobuf.Timestamp paid_date = 2;
+}
+
+message CreateMailDemandLetterPurchaseOrderRequest {
+  PurchaseOrderOptions purchase_order_options = 1;
+  google.protobuf.StringValue case_id = 2;
+  repeated google.protobuf.StringValue demand_letter_ids = 3;
+}
+
+message CreatePurchaseOrderResponse {
+  google.protobuf.StringValue stripe_checkout_url = 1;
+  google.protobuf.StringValue purchase_order_id = 2;
+}
+
+message PurchaseOrderOptions {
+  google.protobuf.StringValue user_email = 1;
+  google.protobuf.StringValue success_url = 2;
+  google.protobuf.StringValue cancel_url = 3;
+}
+
+message GetProductPriceRequest {
+  ProductKind product_kind = 1;
+}
+
+message GetProductPriceResponse {
+  ProductPrice product_price = 1;
+}
+
+message ProductPrice {
+  google.protobuf.Int64Value price_in_cents = 1;
+}
+
+enum ProductKind {
+  UNKNOWN_PRODUCT = 0;
+  MAIL_DEMAND_LETTER_CERTIFIED_MAIL_STANDARD_SHIPPING = 1;
+}
+
+enum BusinessKind {
+  UNKNOWN_BUSINESS_KIND = 0;
+  INDIVIDUAL = 1;
+  CORPORATION = 2;
+  ASSOCIATION = 3;
+  LIMITED_LIABILITY_COMPANY = 4;
+  PARTNERSHIP = 5;
+  OTHER_BUSINESS = 6;
+  NONPROFIT = 7;
+}
+
+enum DeliveryKind {
+  UNKNOWN_DELIVERY_KIND = 0;
+  NONE = 1;
+  IN_PERSON = 2;
+  IN_WRITING = 3;
+  BY_PHONE = 4;
+  BY_CERTIFIED_MAIL = 5;
+}
+
+enum CountryKind {
+  ALL_COUNTRIES = 0;
+  US = 1;
+}
+
+message Agent {
+  google.protobuf.StringValue name = 1;
+  PostalAddress address = 2;
+  DigitalSignature signature = 3;
+  google.protobuf.StringValue job_title = 4;
+  AgentKind kind = 5;
+
+  enum AgentKind {
+    UNKNOWN = 0;
+    GENERAL = 1;
+    REGISTERED = 2;
+    AUTHORIZED = 3;
+  }
+}
+
+message Case {
+  // repeated string completed_section_ids = 64 *Replaced by completedSections*
+  reserved "completed_section_ids";
+  reserved 64;
+  google.protobuf.StringValue case_id = 1;
+  google.protobuf.StringValue quest_id = 2;
+  ParticipantKind participant_kind = 3;
+  google.protobuf.StringValue case_number = 4;
+  google.protobuf.StringValue case_name = 5;
+  google.protobuf.BoolValue requires_sc100a = 8;
+  google.protobuf.Timestamp filed_date = 9;
+  google.protobuf.Timestamp trial_date = 10;
+  google.protobuf.Int32Value court_id = 11;
+  google.protobuf.BoolValue is_demand_letter_desired = 12;
+  google.protobuf.BoolValue has_existing_demand = 13;
+  DeliveryKind existing_demand_delivery_kind = 14;
+
+  google.protobuf.Timestamp create_date = 15;
+  google.protobuf.Timestamp update_date = 16;
+  google.protobuf.BytesValue etag = 17;
+
+  PlaintiffCaseQualifiers plaintiff_case_qualifiers = 18;
+  DefendantCaseQualifiers defendant_case_qualifiers = 19;
+
+  CauseOfActionDetails cause_of_action_details = 20;
+
+  PlaintiffCaseAnalysis plaintiff_case_analysis = 21;
+
+  PlaintiffTimeline plaintiff_timeline = 22;
+
+  UsStateKind filing_state = 23;
+
+  repeated CompletedSection completed_sections = 65;
+  repeated Claim claims = 128;
+  repeated Defendant defendants = 256;
+  repeated Plaintiff plaintiffs = 512;
+  repeated Demand demands = 600;
+
+  enum ParticipantKind {
+    UNKNOWN_PARTICIPANT_KIND = 0;
+    PLAINTIFF = 1;
+    DEFENDANT = 2;
+  }
+}
+
+enum UsStateKind {
+  UNKNOWN_STATE = 0;
+  AL = 1;
+  AK = 2;
+  AZ = 3;
+  AR = 4;
+  CA = 5;
+  CO = 6;
+  CT = 7;
+  DC = 8;
+  DE = 9;
+  FL = 10;
+  GA = 11;
+  HI = 12;
+  ID = 13;
+  IL = 14;
+  IN = 15;
+  IA = 16;
+  KS = 17;
+  KY = 18;
+  LA = 19;
+  ME = 20;
+  MD = 21;
+  MA = 22;
+  MI = 23;
+  MN = 24;
+  MS = 25;
+  MO = 26;
+  MT = 27;
+  NE = 28;
+  NV = 29;
+  NH = 30;
+  NJ = 31;
+  NM = 32;
+  NY = 33;
+  NC = 34;
+  ND = 35;
+  OH = 36;
+  OK = 37;
+  OR = 38;
+  PA = 39;
+  RI = 40;
+  SC = 41;
+  SD = 42;
+  TN = 43;
+  TX = 44;
+  UT = 45;
+  VT = 46;
+  VA = 47;
+  WA = 48;
+  WV = 49;
+  WI = 50;
+  WY = 51;
+}
+
+message CauseOfActionDetails {
+  repeated DesiredOutcomeKind desired_outcomes = 1;
+  OwedMoneyReasonKind owed_money_reason = 2;
+  ProductClaimCategoryKind product_claim_category = 3;
+  SomethingElseReasonKind something_else_reason = 4;
+}
+
+enum DesiredOutcomeKind {
+  UNKNOWN_DESIRED_OBJECT = 0;
+  MONEY = 1;
+  CEASE_ACTION = 2;
+  PROPERTY = 3;
+  SERVICE = 4;
+}
+
+enum OwedMoneyReasonKind {
+  UNKNOWN_OWED_MONEY_REASON = 0;
+  UNPAID_LOAN = 1;
+  RENTED_OUT = 2;
+  UNPAID_ITEM = 3;
+  UNPAID_SERVICE = 4;
+  UNHAPPY_WITH_SERVICE = 5;
+  UNHAPPY_WITH_PRODUCT = 6;
+  UNPAID_SECURITY_DEPOSIT = 7;
+  SOMETHING_ELSE = 8;
+}
+
+enum ProductClaimCategoryKind {
+  UNKNOWN_PRODUCT_CLAIM_CATEGORY = 0;
+  PRODUCT_NEGLIGENCE = 1;
+  PRODUCT_LIABILITY = 2;
+  PRODUCT_WARRANTY = 3;
+}
+
+enum SomethingElseReasonKind {
+  UNKNOWN_SOMETHING_ELSE_REASON = 0;
+  DEFAMATION = 1;
+  HEALTH_OR_SAFETY_HAZARD = 2;
+  MENTALLY_OR_PHYSICALLY_HURT = 3;
+  PROPERTY_DAMAGE = 4;
+  NONE_OWED_MONEY = 5;
+}
+
+message PlaintiffCaseQualifiers {
+  google.protobuf.BoolValue is_government = 1;
+  google.protobuf.BoolValue is_bank = 2;
+  google.protobuf.BoolValue is_lawfirm = 3;
+  google.protobuf.BoolValue is_minor = 4;
+  google.protobuf.BoolValue is_mentally_incompetent = 5;
+  google.protobuf.BoolValue is_deceased_or_estate = 6;
+  google.protobuf.BoolValue is_acceleration_clause = 7;
+  google.protobuf.BoolValue is_loan_assignee = 8;
+  google.protobuf.BoolValue is_over_claim_count_limit = 9;
+  google.protobuf.BoolValue is_over_claim_dollar_threshold = 10;
+}
+
+message DefendantCaseQualifiers {
+  google.protobuf.BoolValue is_non_ca_resident = 1;
+  google.protobuf.BoolValue is_non_ca_business = 2;
+  google.protobuf.BoolValue is_loan_guarantor = 3;
+  google.protobuf.BoolValue is_government = 4;
+  google.protobuf.BoolValue is_bank = 5;
+  google.protobuf.BoolValue is_lawfirm = 6;
+  google.protobuf.BoolValue is_minor = 7;
+  google.protobuf.BoolValue is_mentally_incompetent = 8;
+  google.protobuf.BoolValue is_deceased_or_estate = 9;
+}
+
+message CompletedSection {
+  google.protobuf.StringValue name = 1;
+  google.protobuf.StringValue subsection = 2;
+}
+
+message Claim {
+  ClaimKind kind = 1;
+  google.protobuf.StringValue explanation = 2;
+
+  repeated Contract contracts = 128;
+
+  enum ClaimKind {
+    UNKNOWN_CLAIM_KIND = 0;
+    DEFAMATION = 1;
+    PROPERTY_DAMAGE = 2;
+    BREACH_OF_CONTRACT_LOAN = 3;
+  }
+}
+
+message Contract {
+  reserved 10; // repayment_kind
+  reserved "repayment_kind";
+  google.protobuf.DoubleValue total_claim_amount = 3;
+  google.protobuf.DoubleValue realistic_claim_amount = 4;
+  google.protobuf.Timestamp creation_date = 5;
+  google.protobuf.Timestamp start_date = 6;
+  google.protobuf.Timestamp end_date = 7;
+  google.protobuf.Timestamp perform_date = 8;
+  ContractAgreementKind contract_agreement_kind = 9;
+  google.protobuf.BoolValue was_statutes_of_limitation_waived = 11;
+  google.protobuf.BoolValue has_other_damages = 15;
+  repeated google.protobuf.Timestamp breach_dates = 16;
+
+  repeated Damage damages = 256;
+  repeated Damage other_damages = 512;
+}
+
+enum ContractAgreementKind {
+  UNKNOWN_CONTRACT_AGREEMENT_KIND = 0;
+  WRITTEN = 1;
+  VERBAL = 2;
+}
+
+message Court {
+  google.protobuf.Int32Value court_id = 1;
+  google.protobuf.StringValue name = 2;
+  PostalAddress address = 3;
+  google.protobuf.StringValue web_address = 4;
+  google.protobuf.StringValue phone_number = 5;
+}
+
+message Damage {
+  google.protobuf.Timestamp damage_date = 1;
+  google.protobuf.DoubleValue amount_owed = 2;
+  google.protobuf.DoubleValue interest_owed_amount = 3;
+  google.protobuf.DoubleValue repaid_amount = 4;
+  google.protobuf.StringValue description = 5;
+}
+
+message Defendant {
+  Participant participant = 1;
+  google.protobuf.StringValue doing_business_as = 2;
+  google.protobuf.Int32Value community_court_id = 3;
+  google.protobuf.StringValue defendant_id = 5;
+
+  repeated Agent agents = 256;
+}
+
+message Demand {
+  google.protobuf.DoubleValue amount = 1;
+  google.protobuf.Timestamp date = 3;
+  google.protobuf.Timestamp demand_date = 4;
+  google.protobuf.Timestamp deadline_date = 5;
+  DeliveryKind delivery_kind = 7;
+  google.protobuf.StringValue no_demand_explanation = 9;
+  DemandLetterInfo demand_letter_info = 10;
+  // google.protobuf.BoolValue include_email = 11 *Moved to DemandLetterInfo*
+  reserved "include_email";
+  reserved 11;
+
+  repeated DemandLetterPurchase demand_letter_purchases = 128;
+  repeated Payment payments = 256;
+}
+
+message DemandLetterPurchase {
+  google.protobuf.StringValue purchase_order_id = 1;
+  repeated google.protobuf.StringValue demand_letter_ids = 2;
+}
+
+message DemandLetterInfo {
+  google.protobuf.BoolValue send_copy = 1;
+  google.protobuf.StringValue sender_id = 2;
+  google.protobuf.BoolValue will_sign_digitally = 3;
+  google.protobuf.BoolValue include_email = 4;
+  google.protobuf.StringValue contact_email = 5;
+}
+
+message DemandLetter {
+  google.protobuf.StringValue defendant_id = 1;
+  google.protobuf.BytesValue file = 2;
+  google.protobuf.StringValue demand_letter_id = 3;
+}
+
+message DigitalSignature {
+  google.protobuf.StringValue signature = 1;
+  google.protobuf.Timestamp signed_date = 2;
+}
+
+message Participant {
+  Person person = 1;
+  google.protobuf.StringValue phone_number = 2;
+  google.protobuf.StringValue email = 3;
+  PostalAddress mailing_address = 4;
+  PostalAddress street_address = 5;
+  google.protobuf.BoolValue is_doing_business_as = 6;
+  google.protobuf.BoolValue is_entity = 7;
+  Business business = 8;
+}
+
+message Business {
+  google.protobuf.StringValue name = 1;
+  BusinessKind business_kind = 2;
+  google.protobuf.StringValue other_business_kind = 3;
+  google.protobuf.BoolValue are_partners_named = 4;
+
+  repeated Person partners = 64;
+}
+
+message Payment {
+  PaymentKind kind = 1;
+  PaymentApp payment_app = 2;
+  PaymentCheck payment_check = 3;
+
+  enum PaymentKind {
+    UNKNOWN_PAYMENT_KIND = 0;
+    MAIL_CHECK = 1;
+    PAYMENT_APP = 2;
+  }
+}
+
+message PaymentApp {
+  PaymentAppKind app_kind = 1;
+  google.protobuf.StringValue handle = 2;
+  google.protobuf.StringValue email = 3;
+  google.protobuf.StringValue phone_number = 4;
+
+  enum PaymentAppKind {
+    UNKNOWN_PAYMENT_APP_KIND = 0;
+    APPLE_PAY = 1;
+    VENMO = 2;
+    ZELLE = 3;
+    PAYPAL = 4;
+  }
+}
+
+message PaymentCheck {
+  PostalAddress mailing_address = 1;
+}
+
+message Person {
+  google.protobuf.StringValue first_name = 1;
+  google.protobuf.StringValue middle_name = 2;
+  google.protobuf.StringValue last_name = 3;
+  google.protobuf.StringValue suffix = 4;
+  DigitalSignature signature = 5;
+}
+
+message Plaintiff {
+  reserved 2, 3;
+  reserved "is_over_claim_count_limit", "is_over_claim_dollar_threshhold";
+
+  Participant participant = 1;
+  google.protobuf.StringValue plaintiff_id = 4;
+
+  repeated Agent agents = 17;
+}
+
+message PostalAddress {
+  google.protobuf.StringValue street = 1;
+  google.protobuf.StringValue city = 2;
+  google.protobuf.StringValue state = 3;
+  google.protobuf.StringValue zipcode = 4;
+  google.protobuf.StringValue street2 = 5;
+}
+
+message Quest {
+  google.protobuf.StringValue quest_id = 1;
+  int32 account_id = 2;
+  google.protobuf.StringValue description = 3;
+  google.protobuf.Timestamp start_date = 4;
+  google.protobuf.Timestamp end_date = 5;
+  google.protobuf.BytesValue etag = 6;
+  google.protobuf.Timestamp create_date = 7;
+  google.protobuf.Timestamp update_date = 8;
+
+  repeated Case cases = 64;
+}
+
+message SearchCompaniesCompany {
+  reserved 5;
+  reserved "subdivision";
+  google.protobuf.StringValue name = 1;
+  google.protobuf.StringValue id = 2;
+  PostalAddress address = 3;
+  google.protobuf.StringValue registry_url = 4;
+}
+
+message GetCompanyOfficer {
+  google.protobuf.StringValue id = 1;
+  google.protobuf.StringValue name = 2;
+  google.protobuf.StringValue position = 3;
+}
+
+message GetCompanyCompany {
+  reserved 9;
+  reserved "subdivision";
+  google.protobuf.StringValue name = 1;
+  google.protobuf.StringValue id = 2;
+  PostalAddress address = 3;
+  google.protobuf.StringValue registry_url = 4;
+  google.protobuf.StringValue agent_name = 5;
+  PostalAddress agent_address = 6;
+  google.protobuf.StringValue current_status = 7;
+  google.protobuf.Timestamp incorporation_date = 8;
+  repeated GetCompanyOfficer officers = 10;
+}
+
+message PlaintiffCaseAnalysis {
+  ConfidenceKind can_prove_agreement = 1;
+  ConfidenceKind can_prove_performance = 2;
+  ConfidenceKind can_prove_breach = 3;
+  ConfidenceKind can_prove_damages = 4;
+
+  CollectionEffortKind collection_effort = 5;
+
+  google.protobuf.BoolValue proceed_with_lawsuit = 6;
+
+  repeated SuingReasonKind suing_reasons = 64;
+  repeated NotSuingReasonKind not_suing_reasons = 65;
+  repeated google.protobuf.StringValue custom_suing_reasons = 66;
+  repeated google.protobuf.StringValue custom_not_suing_reasons = 67;
+}
+
+enum ConfidenceKind {
+  UNKNOWN_CONFIDENCE = 0;
+  NO = 1;
+  UNSURE = 2;
+  YES = 3;
+}
+
+enum CollectionEffortKind {
+  UNKNOWN_COLLECTION_EFFORT = 0;
+  LOW = 1;
+  MEDIUM = 2;
+  HIGH = 3;
+}
+
+enum SuingReasonKind {
+  UNKNOWN_REASON_TO_SUE = 0;
+  GET_DAMAGES = 1;
+  GET_LAWSUIT_FEES_COVERED = 2;
+  STAND_UP_FOR_ONESELF = 3;
+  MAKE_PUBLIC_RECORD = 4;
+  PRESENT_CASE_IN_COURT = 5;
+  EVALUATE_RELATIONSHIPS = 6;
+  PROVE_JUST_SOCIETY = 7;
+  BECOME_STRONGER = 8;
+}
+
+enum NotSuingReasonKind {
+  UNKNOWN_REASON_TO_NOT_SUE = 0;
+  NO_LAWSUIT_FEES = 1;
+  NO_PREPARING = 2;
+  NO_CHANGES_IN_RELATIONSHIPS = 3;
+  NO_LOSS_IN_PTO_OR_INCOME = 4;
+  REMAIN_PRIVATE = 5;
+  AVOID_PRESENTING_CASE_IN_COURT = 6;
+}
+
+message PlaintiffTimeline {
+  repeated TimelineEvent timeline_events = 1;
+}
+
+message TimelineEvent {
+  google.protobuf.Timestamp date = 1;
+  google.protobuf.StringValue description = 2;
+  EvidenceKind evidence_kind = 3;
+  google.protobuf.StringValue evidence_description = 4;
+}
+
+enum EvidenceKind {
+  CUSTOM_EVIDENCE_KIND = 0;
+  TEXT_MESSAGE = 1;
+  EMAIL = 2;
+  WRITTEN_NOTE = 3;
+  FINANCIAL_STATEMENT = 4;
+  RECEIPT = 5;
+  TESTIMONY = 6;
+}
+
+// Top Level gRPC Messages
+message CreateCaseRequest {
+  Case case = 1;
+}
+
+message CreateCaseResponse {
+  google.protobuf.StringValue case_id = 1;
+  google.protobuf.BytesValue etag = 2;
+}
+
+message CreateQuestRequest {
+  Quest quest = 1;
+}
+
+message CreateQuestResponse {
+  google.protobuf.StringValue quest_id = 1;
+  google.protobuf.BytesValue etag = 2;
+}
+
+message DeleteQuestRequest {
+  google.protobuf.StringValue quest_id = 1;
+}
+
+message DeleteQuestResponse {
+  bool success = 1;
+}
+
+message GetQuestRequest {
+  google.protobuf.StringValue quest_id = 1;
+}
+
+message GetQuestResponse {
+  Quest quest = 1;
+  int32 account_id = 2;
+}
+
+message GetQuestsRequest {
+  Page page = 1;
+  OrderByKind order_by_update_date = 2;
+}
+
+enum OrderByKind {
+  NO_ORDER_SPECIFIED = 0;
+  ASCENDING = 1;
+  DESCENDING = 2;
+}
+
+message GetQuestsResponse {
+  repeated Quest quests = 1;
+}
+
+message DeleteCaseRequest {
+  google.protobuf.StringValue case_id = 1;
+}
+
+message DeleteCaseResponse {
+  bool success = 1;
+}
+
+message GetCaseRequest {
+  google.protobuf.StringValue case_id = 1;
+}
+
+message GetCaseResponse {
+  Case case = 1;
+}
+
+message UpdateCaseRequest {
+  Case case = 1;
+}
+
+message GetEtagForCaseRequest {
+  google.protobuf.StringValue case_id = 1;
+}
+
+message GetEtagForQuestRequest {
+  google.protobuf.StringValue quest_id = 1;
+}
+
+message GetEtagForCaseResponse {
+  google.protobuf.BytesValue etag = 1;
+}
+
+message GetEtagForQuestResponse {
+  google.protobuf.BytesValue etag = 1;
+}
+
+message UpdateCaseResponse {
+  google.protobuf.BytesValue etag = 1;
+}
+
+message UpdateQuestRequest {
+  Quest quest = 1;
+}
+
+message UpdateQuestResponse {
+  google.protobuf.BytesValue etag = 1;
+}
+
+message GetCourtsForZipCodeRequest {
+  google.protobuf.StringValue zip_code = 1;
+}
+
+message GetCourtsForZipCodeResponse {
+  google.protobuf.StringValue zip_code = 1;
+  repeated CommunityCourt community_courts = 2;
+}
+
+message GetCommunityCourtsRequest {
+  repeated google.protobuf.Int32Value community_court_ids = 1;
+}
+
+message GetCommunityCourtsResponse {
+  repeated CommunityCourt community_courts = 1;
+}
+
+message CommunityCourt {
+  google.protobuf.Int32Value community_court_id = 1;
+  google.protobuf.StringValue community_name = 2;
+  Court court = 3;
+}
+
+message GetCourtRequest {
+  google.protobuf.Int32Value court_id = 1;
+}
+
+message GetCourtResponse {
+  Court court = 1;
+}
+
+message GenerateDemandLettersRequest {
+  google.protobuf.StringValue case_id = 1;
+}
+
+message GenerateDemandLettersResponse {
+  bool success = 1;
+}
+
+message GetDemandLettersRequest {
+  google.protobuf.StringValue case_id = 1;
+  google.protobuf.BytesValue case_etag = 2;
+
+  repeated google.protobuf.StringValue demand_letter_ids = 8;
+}
+
+message GetDemandLettersResponse {
+  DemandLetter demand_letter = 1;
+}
+
+message SearchCompaniesRequest {
+  reserved 3;
+  reserved "subdivision";
+  google.protobuf.StringValue search_term = 1;
+  CountryKind country = 2;
+  google.protobuf.Int32Value page = 4;
+  google.protobuf.Int32Value results_per_page = 5;
+}
+
+message SearchCompaniesResponse {
+  repeated SearchCompaniesCompany companies = 1;
+  google.protobuf.Int32Value page = 2;
+  google.protobuf.Int32Value total_count = 3;
+  google.protobuf.Int32Value total_pages = 4;
+  google.protobuf.Int32Value results_per_page = 5;
+}
+
+message GetCompanyRequest {
+  reserved 3;
+  reserved "subdivision";
+  google.protobuf.StringValue id = 1;
+  CountryKind country = 2;
+}
+
+message GetCompanyResponse {
+  GetCompanyCompany company = 1;
+}
+
+// Helper messages
+
+message Page {
+  google.protobuf.Int32Value limit = 1;
+  google.protobuf.Int32Value offset = 2;
+}
