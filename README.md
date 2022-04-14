@@ -272,8 +272,12 @@ turns into:
 
 ### Change the parsing rules 
 
-1. Update the parsing rules in `proto.peg`
-2. In the console, run `npm run build`. This generates a new `parser.js` file with the parsing rules.
+1. Update the grammar in `proto.peg`
+2. Run `npm run build`. This generates a new `parser.js` file with the parsing rules.
+
+### Format and style
+
+Fix the formatting and styling issues according to ESLint and Prettier: `npm run prettify`
 
 ### Publish a new version of the package
 

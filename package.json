@@ -1,44 +1,45 @@
 {
-  "name": "@q4justice/q4j-proto-parse",
-  "version": "0.1.2",
-  "description": "Quest for Justice utility to parse a proto3 file, forked from lal12/proto-parse",
-  "main": "./src/proto-parse.js",
-  "scripts": {
-    "build": "node scripts/build.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Q4Justice/q4j-proto-parse.git"
-  },
-  "publishConfig": {
-    "@q4justice:registry": "https://npm.pkg.github.com/"
-  },
-  "keywords": [
-    "proto",
-    "protobuf",
-    "parse",
-    "peg.js",
-    "pegjs",
-    "file",
-    "proto3"
-  ],
-  "author": "jcnguyen",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Q4Justice/q4j-proto-parse/issues"
-  },
-  "homepage": "https://github.com/Q4Justice/q4j-proto-parse#readme",
-  "dependencies": {
-    "ow": "^0.28.1"
-  },
-  "devDependencies": {
-    "eslint": "^7.25.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-unused-imports": "^1.1.5",
-    "jest": "^27.5.1",
-    "pegjs": "^0.10.0",
-    "prettier": "^2.4.1"
-  }
+    "name": "@q4justice/q4j-proto-parse",
+    "version": "0.1.2",
+    "description": "Quest for Justice utility to parse a proto3 file, forked from lal12/proto-parse",
+    "main": "./src/proto-parse.js",
+    "scripts": {
+        "build": "node scripts/build.js",
+        "prettify": "npx eslint --fix \"*/*.js\" && npx prettier --ignore-path \".prettierignore\" --write \"*/*.{js,json}\""
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Q4Justice/q4j-proto-parse.git"
+    },
+    "publishConfig": {
+        "@q4justice:registry": "https://npm.pkg.github.com/"
+    },
+    "keywords": [
+        "proto",
+        "protobuf",
+        "parse",
+        "peg.js",
+        "pegjs",
+        "file",
+        "proto3"
+    ],
+    "author": "jcnguyen",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/Q4Justice/q4j-proto-parse/issues"
+    },
+    "homepage": "https://github.com/Q4Justice/q4j-proto-parse#readme",
+    "dependencies": {
+        "ow": "^0.28.1"
+    },
+    "devDependencies": {
+        "eslint": "^7.25.0",
+        "eslint-config-prettier": "^8.3.0",
+        "eslint-plugin-import": "^2.22.1",
+        "eslint-plugin-prettier": "^4.0.0",
+        "eslint-plugin-unused-imports": "^1.1.5",
+        "jest": "^27.5.1",
+        "pegjs": "^0.10.0",
+        "prettier": "^2.4.1"
+    }
 }
